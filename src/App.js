@@ -1,38 +1,66 @@
 import React from 'react';
-import logo from './logo.svg';
-import electronLogo from './electronjs-icon.svg';
+import Button from '@atlaskit/button';
+import Textfield from '@atlaskit/textfield';
+import Note from './components/note';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <div>
-          <img src={logo} className="App-logo" alt="react-logo" />
-          <img src={electronLogo} className="App-logo" alt="elect-logo" />
-        </div>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="App-link"
-          href="https://www.electronjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn Electron
-        </a>
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state ={
+      noteText:'',
+      notes:[]
+    }
+  }
+
+  updateNoteText(noteText){
+    this.setState({noteText: noteText.target.value})
+  }
+
+  addNote(){
+
+    if(this.state.noteText === ''){return false;}
+
+    let notesArr = this.state.notes;
+    notesArr.push(this.state.noteText);
+    this.setState({noteText: ''});
+  }
+
+
+
+
+  render(){
+
+    let notes = this.state.notes.map((val,key)=>{
+      return <Note key={key} text={val}/>
+    })
+
+    return (
+      <div className="App">
+      <header>
+        <h1>To Do Application</h1>
       </header>
-    </div>
-  );
+      <main>
+        <div className="add-section">
+          <Textfield  
+            className="text-input"
+            ref={((input)=>{this.textInput =input})}
+            value={this.state.noteText}
+            name="auto-focus" autoFocus width="medium"
+            onChange={noteText => this.updateNoteText(noteText)}
+          />
+          <Button className="add-btn" appearance="primary" onClick={this.addNote.bind(this)}>
+            Add
+          </Button>
+        </div>
+        <div className="notes">
+          {notes}
+        </div>
+      </main> 
+      </div>
+    );
+  }
+  
 }
 
 export default App;
